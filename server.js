@@ -1,6 +1,11 @@
 // Require Dependencies
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
+const morgan = require('morgan')
+
+
+const Project = require('./models/project');
 
 // get .env variables
 require('dotenv').config()
@@ -28,6 +33,30 @@ app.get('/', (req, res) => {
 app.get('/projects', async (req, res) => {
     try {
         res.json(await Project.find({}))
+    } catch (error) {
+        res.status(400).json(error)
+    }
+})
+
+app.post('/projects', async (req, res) => {
+    try {
+        res.json(await Project.create(req.body))
+    } catch (error) {
+        res.status(400).json(error)
+    }
+})
+
+app.delete('/projects/:id', async (req, res) => {
+    try {
+        res.json(await Project.findByIdAndDelete(req.params.id))
+    } catch (error) {
+        res.status(400).json(error)
+    }
+})
+
+app.put('/projects/:id', async (req, res) => {
+    try {
+        res.json(await Project.findByIdAndUpdate(req.params.id, req.body, { new: true }))
     } catch (error) {
         res.status(400).json(error)
     }
